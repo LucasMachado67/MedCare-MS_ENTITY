@@ -5,23 +5,18 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.patient.service.PersonService;
-import com.ms.patient.dto.PersonCreationDTO;
 import com.ms.patient.dto.PersonEmailSenderDto;
 import com.ms.patient.dto.PersonResponseDTO;
 import com.ms.patient.mappers.PersonMapper;
 import com.ms.patient.models.Person;
 
-import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 
 /**
  * Controlador REST para gerir operações CRUD (Criação, Leitura, Atualização e Deleção)
@@ -82,6 +77,7 @@ public class PersonController {
      * e o status HTTP 200 (OK).
      */
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<PersonResponseDTO>> findAll() {
         //Pegando a lista de pessoas do service
         List<Person> persons = service.findAll();
@@ -90,37 +86,6 @@ public class PersonController {
         //Retornando a lista
         return ResponseEntity.ok(personResponseDTOs);
 
-    }
-    /**
-     * Atualiza os dados de uma pessoa existente com base no 'ID'.
-     *
-     * @param id O 'ID' da pessoa a ser atualizada.
-     * @return ResponseEntity contendo o {@link PersonResponseDTO} atualizado e o status HTTP 200 (OK).
-     * @throws NoSuchElementException Se o 'ID' não for encontrado (mapeado para 404).
-     * @throws jakarta.validation.ValidationException se o DTO for inválido.
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<PersonResponseDTO> updatePerson(@PathVariable long id,@Valid @RequestBody PersonCreationDTO person) {
-        
-        //Chama o service para executar o update
-        Person updatedEntity = service.updatePerson(id, person);
-        //Mapeia a entidade atualizada para o DTO de resposta
-        PersonResponseDTO personResponseDTO = mapper.toDtoResponse(updatedEntity);
-        //Retorna 200 OK e o corpo atualizado
-        return ResponseEntity.ok(personResponseDTO);
-    }
-    /**
-     * Delete uma pessoa do sistema pelo seu 'ID'.
-     *
-     * @param id O 'ID' da pessoa a ser deletada.
-     * @return ResponseEntity com o status HTTP 204 (No Content), indicando sucesso na deletion sem corpo de resposta.
-     * @throws NoSuchElementException Se o 'ID' não for encontrado (mapeado para 404)
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePerson(@PathVariable long id){
-        service.deletePerson(id);
-
-        return ResponseEntity.noContent().build();
     }
 
 }

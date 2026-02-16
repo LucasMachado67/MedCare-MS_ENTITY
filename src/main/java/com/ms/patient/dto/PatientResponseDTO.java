@@ -2,7 +2,6 @@ package com.ms.patient.dto;
 
 import com.ms.patient.enums.PatientSituation;
 
-import java.util.Date;
 import java.util.List;
 
 /**

@@ -11,7 +11,6 @@ import com.ms.patient.dto.PersonEmailSenderDto;
 import com.ms.patient.exceptions.CpfAlreadyExistsException;
 import com.ms.patient.exceptions.EmailAlreadyExistsException;
 import com.ms.patient.exceptions.InvalidCpfException;
-import com.ms.patient.mappers.PersonMapper;
 import com.ms.patient.models.Person;
 import com.ms.patient.repositories.PersonRepository;
 import com.ms.patient.utils.CpfValidatorUtils;
@@ -32,8 +31,6 @@ public class PersonService {
     @Autowired
     private PersonRepository repository;
 
-    @Autowired
-    private PersonMapper mapper;
 
     /**
      * Cria e persiste uma nova pessoa no sistema, aplicando uma série de validações.
@@ -109,42 +106,6 @@ public class PersonService {
      */
     public List<Person> findAll(){
         return repository.findAll();
-    }
-
-    /**
-     * Atualiza os dados de uma pessoa existente com base no'ID' e nos dados fornecidos no DTO.
-     *
-     * <p>Busca a pessoa existente, aplica as mudanças do DTO utilizando o Mapper,
-     * e então persiste a entidade atualizada.</p>
-     *
-     * @param id O 'ID' da pessoa a ser atualizada.
-     * @param personCreationDTO O DTO contendo os novos dados da pessoa.
-     * @return A entidade {@link Person} atualizada.
-     * @throws NoSuchElementException Se nenhuma pessoa for encontrada com o'ID' fornecido
-     * (lançada por {@link #findPersonById(long)}).
-     */
-    public Person updatePerson(long id, PersonCreationDTO personCreationDTO){
-        Person existingPerson = findPersonById(id);
-
-        mapper.updatePersonFromDto(personCreationDTO, existingPerson);
-
-        return repository.save(existingPerson);
-    }
-
-    /**
-     * Delete permanentemente uma pessoa do sistema pelo seu 'ID'.
-     *
-     * <p>
-     * Nota: O uso de {@code .get()} para buscar antes de deletar pode lançar {@link java.util.NoSuchElementException}
-     * se o 'ID' não existir.
-     * </p>
-     *
-     * @param id O 'ID' da pessoa a ser deletada.
-     */
-    public void deletePerson(long id){
-        Person personToDelete = repository.findById(id).orElseThrow(() -> new NoSuchElementException("Not Found"));
-
-        repository.delete(personToDelete);
     }
 
     /**

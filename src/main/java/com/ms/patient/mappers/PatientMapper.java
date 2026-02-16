@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan
@@ -22,4 +23,7 @@ public interface PatientMapper {
 
     List<Patient> toPatientResponse(List<PatientResponseDTO> dtos);
     List<PatientResponseDTO> toDtoResponse(List<Patient> patients);
+
+    void updatePatientFromDto(PatientCreationDTO dto, @MappingTarget Patient patient);
+
 }

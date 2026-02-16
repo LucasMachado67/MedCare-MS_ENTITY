@@ -1,11 +1,7 @@
 package com.ms.patient.dto;
 
-import jakarta.validation.constraints.Email;
-import org.hibernate.validator.constraints.br.CPF;
-
 import com.ms.patient.enums.PatientSituation;
 
-import java.util.Date;
 import java.util.List;
 
 /**

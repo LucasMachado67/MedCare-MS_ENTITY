@@ -13,9 +13,12 @@ import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,13 +58,16 @@ public class MedicController {
      * se a regra de negócio for violada (mapeada para 4xx ou 500).
      */
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MEDIC') or hasRole('ASSISTANT')")
     public ResponseEntity<MedicResponseDTO> registerMedic(@RequestBody @Valid MedicCreationDTO dto) throws JsonProcessingException {
 
-        MedicResponseDTO responseDTO = service.createMedic(dto);
+        Medic responseDTO = service.createMedic(dto);
+
+        MedicResponseDTO response = mapper.toMedicResponseDTO(responseDTO);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(responseDTO);
+                .body(response);
     }
 
     /**
@@ -93,8 +99,30 @@ public class MedicController {
     @GetMapping("/all")
     public ResponseEntity<List<MedicResponseDTO>> findAll(){
         
-        List<MedicResponseDTO> medics = service.findAll();
+        List<Medic> medics = service.findAll();
+        List<MedicResponseDTO> response = mapper.toDtoResponse(medics);
 
-        return ResponseEntity.ok(medics);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ASSISTANT', 'MEDIC')")
+    public ResponseEntity<MedicResponseDTO> updateMedic(@PathVariable long medicId, @Valid @RequestBody MedicCreationDTO entity) {
+
+        
+        Medic medicUpdated = service.updateMedic(entity, medicId);
+        MedicResponseDTO response = mapper.toMedicResponseDTO(medicUpdated);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
+    }
+    
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ASSISTANT', 'ADMIN')")
+    public ResponseEntity<Void> deleteMedic(@PathVariable long medicId){
+        
+        service.deleteMedic(medicId);
+        return ResponseEntity.noContent().build();
     }
 }

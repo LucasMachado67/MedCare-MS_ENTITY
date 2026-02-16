@@ -33,5 +33,15 @@
     "name": "medcare.aws.sqs.queue.medic.register",
     "type": "java.lang.String",
     "description": "A description for 'medcare.aws.sqs.queue.medic.register'"
+  },
+  {
+    "name": "medcare.aws.sqs.queue.entity.register",
+    "type": "java.lang.String",
+    "description": "A description for 'medcare.aws.sqs.queue.entity.register'"
+  },
+  {
+    "name": "api.security.token.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'api.security.token.secret'"
   }
 ]}

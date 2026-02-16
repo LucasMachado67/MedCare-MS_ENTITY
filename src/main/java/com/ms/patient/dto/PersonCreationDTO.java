@@ -29,17 +29,18 @@ public class PersonCreationDTO {
              message = "O telefone não está no formato correto (Ex: (11) 99999-9999 ou 11999999999).")
     private String phone;
 
-    private AddressDTO addressDTO;
+    private AddressDTO address;
 
     public PersonCreationDTO(){}
 
-    public PersonCreationDTO(String name, Date birthDate, String cpf, String gender, String email, String phone, AddressDTO addressDTO){
+    public PersonCreationDTO(String name, Date birthDate, String cpf, String gender, String email, String phone, AddressDTO address){
         setName(name);
         setBirthDate(birthDate);
         setCpf(cpf);
         setGender(gender);
         setEmail(email);
         setPhone(phone);
+        setAddress(address);
     }
 
     public String getName() {
@@ -91,11 +92,11 @@ public class PersonCreationDTO {
     }
 
     public AddressDTO getAddress() {
-        return addressDTO;
+        return address;
     }
 
-    public void setAddress(AddressDTO addressDTO) {
-        this.addressDTO = addressDTO;
+    public void setAddress(AddressDTO address) {
+        this.address = address;
     }
 
     

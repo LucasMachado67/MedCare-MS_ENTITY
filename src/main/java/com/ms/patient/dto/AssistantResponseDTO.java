@@ -1,6 +1,5 @@
 package com.ms.patient.dto;
 
-import java.util.Date;
 
 public class AssistantResponseDTO extends PersonResponseDTO{
 

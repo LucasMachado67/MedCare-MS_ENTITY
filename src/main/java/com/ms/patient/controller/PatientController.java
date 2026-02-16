@@ -7,6 +7,8 @@ import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +33,8 @@ import jakarta.validation.Valid;
  * @author Lucas Edson Machado
  * @version 1.0.0
  */
+import org.springframework.web.bind.annotation.PutMapping;
+
 @RestController
 @RequestMapping("patient")
 public class PatientController {
@@ -54,13 +58,15 @@ public class PatientController {
      * @throws ValidationException se o DTO for inválido.
      */
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ASSISTANT') or hasRole('PATIENT')")
     public ResponseEntity<PatientResponseDTO> registerPatient(@RequestBody @Valid PatientCreationDTO dto) throws JsonProcessingException {
 
-        PatientResponseDTO responseDTO = service.createPatient(dto);
+        Patient savedPatient = service.createPatient(dto);
 
+        PatientResponseDTO response = mapper.toPatientResponseDTO(savedPatient);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(responseDTO);
+                .body(response);
     }
     /**
      * Retorna os dados do paciente através do id
@@ -93,10 +99,32 @@ public class PatientController {
      * HTTP 200 (OK).
      */
     @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ASSISTANT')")
     public ResponseEntity<List<PatientResponseDTO>> findAll(){
         
         List<Patient> patients = service.findAll();
         List<PatientResponseDTO> responseDTO = mapper.toDtoResponse(patients);
         return ResponseEntity.ok(responseDTO);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ASSISTANT', 'PATIENT')")
+    public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable long patientId, @Valid @RequestBody PatientCreationDTO entity) {
+
+        
+        Patient updatedPatient = service.updatePatient(entity, patientId);
+        PatientResponseDTO response = mapper.toPatientResponseDTO(updatedPatient);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
+    }
+    
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('PATIENT', 'ADMIN')")
+    public ResponseEntity<Void> deletePatient(@PathVariable long patientId){
+        
+        service.deletePatient(patientId);
+        return ResponseEntity.noContent().build();
     }
 }

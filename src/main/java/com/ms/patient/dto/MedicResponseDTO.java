@@ -1,6 +1,5 @@
 package com.ms.patient.dto;
 
-import java.util.Date;
 
 /**
  * DTO (Data Transfer Object) utilizado para representar um Médico nos retornos

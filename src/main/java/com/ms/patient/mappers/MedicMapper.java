@@ -3,8 +3,10 @@ package com.ms.patient.mappers;
 import com.ms.patient.dto.MedicCreationDTO;
 import com.ms.patient.dto.MedicResponseDTO;
 import com.ms.patient.models.Medic;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.util.List;
@@ -36,4 +38,5 @@ public interface MedicMapper {
 
     List<Medic> toMedicResponse(List<MedicResponseDTO> dtos);
     List<MedicResponseDTO> toDtoResponse(List<Medic> medics);
+    void updateMedicFromDto(MedicCreationDTO dto, @MappingTarget Medic medic);
 }

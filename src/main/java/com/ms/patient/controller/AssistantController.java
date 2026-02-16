@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,6 +58,7 @@ public class AssistantController {
      * se a regra de negócio for violada (mapeada para 4xx ou 500).
      */
     @PostMapping("/create")
+    @PreAuthorize("hasAnyRole('ASSISTANT', 'ADMIN')")
     public ResponseEntity<AssistantResponseDTO> registerAssistant(@RequestBody @Valid AssistantCreationDTO dto) throws JsonProcessingException {
 
         AssistantResponseDTO responseDTO = service.createAssistant(dto);
@@ -75,6 +77,7 @@ public class AssistantController {
      * @throws NoSuchElementException Se nenhum assistente for encontrado com o ID fornecido (mapeado para 404 Not Found).
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ASSISTANT', 'ADMIN')")
     public ResponseEntity<AssistantResponseDTO> findById(@PathVariable long id){
         
         Assistant foundAssistant = service.findById(id);

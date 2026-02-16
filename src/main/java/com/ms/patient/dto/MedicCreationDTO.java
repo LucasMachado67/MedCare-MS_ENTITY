@@ -1,11 +1,5 @@
 package com.ms.patient.dto;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import org.hibernate.validator.constraints.br.CPF;
-
-import java.util.Date;
-
 /**
  * DTO (Data Transfer Object) utilizado para a criação de um novo registro de Médico.
  *

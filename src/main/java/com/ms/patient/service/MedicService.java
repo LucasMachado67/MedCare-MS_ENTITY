@@ -3,12 +3,18 @@ package com.ms.patient.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ms.patient.dto.MedicCreationDTO;
 import com.ms.patient.dto.MedicResponseDTO;
+import com.ms.patient.exceptions.BusinessException;
 import com.ms.patient.exceptions.CpfAlreadyExistsException;
+import com.ms.patient.exceptions.CrmInvalidException;
 import com.ms.patient.mappers.MedicMapper;
 import com.ms.patient.models.Medic;
 import com.ms.patient.producers.UserCreationProducer;
 import com.ms.patient.repositories.MedicRepository;
+
+import jakarta.validation.Valid;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -55,22 +61,22 @@ public class MedicService {
      * 4. Publicação de um evento de criação de usuário assíncrono.</p>
      *
      * @param dto O DTO de criação contendo os dados do novo médico.
-     * @return O {@link MedicResponseDTO} do médico recém-criado.
+     * @return O {@link Medic} do médico recém-criado.
      * @throws RuntimeException se o CRM já estiver cadastrado.
      * @throws CpfAlreadyExistsException se o Cpf já estiver cadastrado.
      */
-    public MedicResponseDTO createMedic(MedicCreationDTO dto) throws JsonProcessingException{
+    public Medic createMedic(@Valid MedicCreationDTO dto) throws JsonProcessingException{
 
         // 1. VALIDAÇÃO DE REGRA DE NEGÓCIO
         // Garantir que o CPF e o CRM são únicos antes de salvar.
         if (repository.existsByCrm(dto.getCrm())) {
-            throw new RuntimeException("CRM já cadastrado.");
+            throw new CrmInvalidException("CRM already registered");
         }
 
         //Validação dos campos de Person via personService
         boolean result = personService.validatePersonInfo(dto);
         if(!result){
-            throw new IllegalArgumentException();
+            throw new BusinessException("Invalid medic data");
         }
 
         // 2. CONVERSÃO DTO ≥ ENTIDADE
@@ -87,7 +93,7 @@ public class MedicService {
         // 4. Criando o objeto de evento
         medicProducer.publishUserCreationToMedicEvent(savedMedic);
         
-        return mapper.toMedicResponseDTO(savedMedic);
+        return savedMedic;
     }
 
     /**
@@ -96,9 +102,9 @@ public class MedicService {
      * @return Uma {@link List} de {@link MedicResponseDTO}s. Pode ser uma lista vazia,
      * mas nunca {@code null}.
      */
-    public List<MedicResponseDTO> findAll(){
+    public List<Medic> findAll(){
         List<Medic> medics = repository.findAll();
-        return mapper.toDtoResponse(medics);
+        return medics;
     }
 
     /**
@@ -110,6 +116,30 @@ public class MedicService {
      */
     public Medic findById(long id){
         return repository.findById(id).orElseThrow(() -> new NoSuchElementException("NOT FOUND"));
+    }
+
+    public Medic updateMedic(@Valid MedicCreationDTO newDto, long medicId){
+
+        // 1. VALIDAÇÃO DE REGRA DE NEGÓCIO
+
+        var existingMedic = repository.findById(medicId).orElseThrow();
+        //Validação dos campos de Person via personService
+        boolean result = personService.validatePersonInfo(newDto);
+        if(!result)
+            throw new BusinessException("Invalid medic data");
+        
+        mapper.updateMedicFromDto(newDto, existingMedic);
+
+        return repository.save(existingMedic);
+
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteMedic(long medicId){
+        if(repository.findById(medicId).isPresent())
+            repository.deleteById(medicId);
+        else
+            throw new NoSuchElementException("MEDIC NOT FOUND, nothing was deleted");
     }
 
 }

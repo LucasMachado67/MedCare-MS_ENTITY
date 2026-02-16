@@ -1,11 +1,5 @@
 package com.ms.patient.dto;
 
-import java.util.Date;
-
-import org.hibernate.validator.constraints.br.CPF;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 
 public class AssistantCreationDTO extends PersonCreationDTO{
 
