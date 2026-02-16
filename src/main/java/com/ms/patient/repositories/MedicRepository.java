@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Interface de repositório responsável por operações de acesso a dados (CRUD)
+ * 'Interface' de repositório responsável por operações de acesso a dados (CRUD)
  * para a entidade {@link Medic}.
  *
  * <p>Estende {@link org.springframework.data.jpa.repository.JpaRepository},
@@ -17,6 +17,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MedicRepository extends JpaRepository<Medic, Long> {
 
-    Boolean existsByCpf(String cpf);
     Boolean existsByCrm(String crm);
 }
