@@ -79,7 +79,7 @@ public class ResourceServerConfig {
     }
     /**
      * Personaliza a conversão do JWT para o contexto de segurança do Spring.
-     * * <p>Este conversor extrai a claim "role" do payload do JWT e a transforma em uma 
+     * * <p>Este conversor extrai a claim "role" do payload do JWT e a transforma numa
      * autoridade do Spring Security, prefixando-a com "ROLE_". Isso permite o uso 
      * de anotações como {@code @PreAuthorize("hasRole('ADMIN')")}.</p>
      * * @return Um {@link JwtAuthenticationConverter} com lógica de mapeamento de roles.

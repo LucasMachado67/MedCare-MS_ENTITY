@@ -4,15 +4,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ms.patient.dto.MedicCreationDTO;
+import com.ms.patient.dto.MedicResponseDTO;
+import com.ms.patient.models.Medic;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ms.patient.dto.AssistantCreationDTO;
 import com.ms.patient.dto.AssistantResponseDTO;
@@ -23,7 +21,7 @@ import com.ms.patient.service.AssistantService;
 import jakarta.validation.Valid;
 
 /**
- * Controlador REST para gerenciar operações relacionadas à entidade Assitente (Assistant).
+ * Controlador REST para gerir operações relacionadas à entidade Assistente (Assistant).
  *
  * <p>Mapeado para o caminho base "/assistants". Lida com a criação e consulta de registros
  * de assistant no sistema.</p>
@@ -45,7 +43,7 @@ public class AssistantController {
     }
 
     /**
-     * Registra um novo assistente no sistema.
+     * Registry um novo assistente no sistema.
      *
      * <p>Recebe o DTO de criação no corpo da requisição, delega ao serviço para persistência
      * e retorna o recurso criado.</p>
@@ -53,7 +51,7 @@ public class AssistantController {
      * @param dto Os dados do assistente, incluindo dados da Pessoa e Endereço.
      * @return ResponseEntity contendo o {@link AssistantResponseDTO} do assistente criado
      * e o status HTTP 201 (Created).
-     * @throws jakarta.validation.ValidationException Se o DTO não for válido.
+     * @throws jakarta.validation.ValidationException Se o DTO for inválido.
      * @throws RuntimeException (ou exceção de negócio específica, como CRM já existe)
      * se a regra de negócio for violada (mapeada para 4xx ou 500).
      */
@@ -61,15 +59,17 @@ public class AssistantController {
     @PreAuthorize("hasAnyRole('ASSISTANT', 'ADMIN')")
     public ResponseEntity<AssistantResponseDTO> registerAssistant(@RequestBody @Valid AssistantCreationDTO dto) throws JsonProcessingException {
 
-        AssistantResponseDTO responseDTO = service.createAssistant(dto);
+        Assistant assistant = service.createAssistant(dto);
+
+        AssistantResponseDTO response = mapper.toAssistantResponseDTO(assistant);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(responseDTO);
+                .body(response);
     }
 
     /**
-     * Busca os detalhes de um assistente específico pelo seu ID.
+     * Busca os detalhes de um assistente específico pelo seu 'ID'.
      *
      * @param id O identificador único do assistente a ser buscado.
      * @return ResponseEntity contendo o {@link AssistantResponseDTO} correspondente
@@ -98,8 +98,29 @@ public class AssistantController {
     @GetMapping("/all")
     public ResponseEntity<List<AssistantResponseDTO>> findAll(){
         
-        List<AssistantResponseDTO> assistants = service.findAll();
+        List<Assistant> assistants = service.findAll();
+        List<AssistantResponseDTO> response = mapper.toDtoResponse(assistants);
+        return ResponseEntity.ok(response);
+    }
 
-        return ResponseEntity.ok(assistants);
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ASSISTANT')")
+    public ResponseEntity<AssistantResponseDTO> updateAssistant(@PathVariable long assistantId, @Valid @RequestBody AssistantCreationDTO entity) {
+
+
+        Assistant assistantUpdated = service.updateAssistant(entity, assistantId);
+        AssistantResponseDTO response = mapper.toAssistantResponseDTO(assistantUpdated);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ASSISTANT', 'ADMIN')")
+    public ResponseEntity<Void> deleteAssistant(@PathVariable long assistantId){
+
+        service.deleteAssistant(assistantId);
+        return ResponseEntity.noContent().build();
     }
 }

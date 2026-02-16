@@ -44,7 +44,7 @@ public class UserCreationProducer {
      *
      * <p>O evento é enviado para a fila definida pela {@code routingKeyMedic} com o papel "MEDIC".</p>
      *
-     * @param medic A entidade Medic recém-criada, contendo 'ID' e E-mail necessários para o evento.
+     * @param medic A entidade Medic recém-criada, contendo 'ID' e e-mail necessários para o evento.
      */
     public void publishUserCreationToMedicEvent(Medic medic) throws JsonProcessingException {
         //Usando o mesmo ID para ambas as entidades (Medic = UserMedic)
@@ -89,7 +89,7 @@ public class UserCreationProducer {
      *
      * <p>O evento é enviado para a fila definida pela {@code routingKeyPatient} com o papel "USER".</p>
      *
-     * @param patient A entidade Patient recém-criada, contendo 'ID' e 'E-mail' necessários para o evento.
+     * @param patient A entidade Patient recém-criada, contendo 'ID' e 'e-mail' necessários para o evento.
      */
     public void publishUserCreationToPatientEvent(Patient patient) throws JsonProcessingException{
         //Usando o mesmo ID para ambas as entidades (Medic = UserMedic)

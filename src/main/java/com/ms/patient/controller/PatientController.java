@@ -58,7 +58,7 @@ public class PatientController {
      * @throws ValidationException se o DTO for inválido.
      */
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('ASSISTANT') or hasRole('PATIENT')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ASSISTANT') or hasRole('USER')")
     public ResponseEntity<PatientResponseDTO> registerPatient(@RequestBody @Valid PatientCreationDTO dto) throws JsonProcessingException {
 
         Patient savedPatient = service.createPatient(dto);
@@ -108,7 +108,7 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'ASSISTANT', 'PATIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ASSISTANT', 'USER')")
     public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable long patientId, @Valid @RequestBody PatientCreationDTO entity) {
 
         
@@ -121,7 +121,7 @@ public class PatientController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('PATIENT', 'ADMIN')")
+    @PreAuthorize("hasRole('USER', 'ADMIN')")
     public ResponseEntity<Void> deletePatient(@PathVariable long patientId){
         
         service.deletePatient(patientId);

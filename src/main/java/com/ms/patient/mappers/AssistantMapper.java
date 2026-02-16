@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.context.annotation.ComponentScan;
 
 import com.ms.patient.dto.AssistantCreationDTO;
@@ -23,4 +24,7 @@ public interface AssistantMapper {
 
     List<Assistant> toAssistantResponse(List<AssistantResponseDTO> dtos);
     List<AssistantResponseDTO> toDtoResponse(List<Assistant> assistants);
+
+    void updateAssistantFromDto(AssistantCreationDTO dto, @MappingTarget Assistant assistant);
+
 }

@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ms.patient.dto.MedicCreationDTO;
+import com.ms.patient.exceptions.BusinessException;
 import com.ms.patient.utils.RegistrationNumber;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import com.ms.patient.dto.AssistantCreationDTO;
@@ -15,6 +18,7 @@ import com.ms.patient.models.Assistant;
 import com.ms.patient.models.Medic;
 import com.ms.patient.producers.UserCreationProducer;
 import com.ms.patient.repositories.AssistantRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AssistantService {
@@ -48,7 +52,7 @@ public class AssistantService {
      * @throws RuntimeException se o CRM já estiver cadastrado.
      * @throws CpfAlreadyExistsException se o Cpf já estiver cadastrado.
      */
-    public AssistantResponseDTO createAssistant(AssistantCreationDTO dto) throws JsonProcessingException {
+    public Assistant createAssistant(@Valid AssistantCreationDTO dto) throws JsonProcessingException {
 
         RegistrationNumber registrationNumber = new RegistrationNumber();
         // 1. VALIDAÇÃO DE REGRA DE NEGÓCIO
@@ -56,7 +60,7 @@ public class AssistantService {
         //Validação dos campos de Person via personService
         boolean result = personService.validatePersonInfo(dto);
         if(!result){
-            throw new IllegalArgumentException();
+            throw new BusinessException("Invalid assistant data");
         }
 
         do {
@@ -77,7 +81,7 @@ public class AssistantService {
         // 4. Criando o objeto de evento
         assistantProducer.publishUserCreationToAssistantEvent(savedAssistant);
         
-        return mapper.toAssistantResponseDTO(savedAssistant);
+        return savedAssistant;
     }
 
     /**
@@ -86,19 +90,43 @@ public class AssistantService {
      * @return Uma {@link List} de {@link AssistantResponseDTO}s. Pode ser uma lista vazia,
      * mas nunca {@code null}.
      */
-    public List<AssistantResponseDTO> findAll(){
-        List<Assistant> assistants = repository.findAll();
-        return mapper.toDtoResponse(assistants);
+    public List<Assistant> findAll(){
+        return repository.findAll();
     }
 
     /**
      * Busca um assistente pelo seu identificador único.
      *
-     * @param id O ID do assistente a ser procurado.
+     * @param id O 'ID' do assistente a ser procurado.
      * @return A entidade {@link Medic} encontrada.
-     * @throws NoSuchElementException Se nenhum assistente for encontrado com o ID fornecido.
+     * @throws NoSuchElementException Se nenhum assistente for encontrado com o 'ID' fornecido.
      */
     public Assistant findById(long id){
-        return repository.findById(id).orElseThrow(() -> new NoSuchElementException("NOT FOUND"));
+        return repository.findById(id).orElseThrow(() -> new NoSuchElementException("ASSISTANT NOT FOUND"));
+    }
+
+
+    public Assistant updateAssistant(@Valid AssistantCreationDTO newDto, long assistantId){
+
+        // 1. VALIDAÇÃO DE REGRA DE NEGÓCIO
+
+        var existingAssistant = repository.findById(assistantId).orElseThrow();
+        //Validação dos campos de Person via personService
+        boolean result = personService.validatePersonInfo(newDto);
+        if(!result)
+            throw new BusinessException("Invalid assistant data");
+
+        mapper.updateAssistantFromDto(newDto, existingAssistant);
+
+        return repository.save(existingAssistant);
+
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteAssistant(long assistantId){
+        if(repository.findById(assistantId).isPresent())
+            repository.deleteById(assistantId);
+        else
+            throw new NoSuchElementException("ASSISTANT NOT FOUND, nothing was deleted");
     }
 }
