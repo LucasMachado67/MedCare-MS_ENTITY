@@ -89,5 +89,15 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusiness(BusinessException ex) {
+        ErrorResponse error = new ErrorResponse(
+                ex.getMessage(),
+                400
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 }
 

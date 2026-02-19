@@ -2,6 +2,9 @@ package com.ms.patient.models;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ms.patient.enums.AssistantStatus;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -14,13 +17,13 @@ public class Assistant extends Person{
 
     private String registrationNumber;
     @NotNull
-    private Boolean active;
+    @JsonProperty("active")
+    private AssistantStatus status = AssistantStatus.ACTIVE;
 
     public Assistant(String name, Date birthDate, String cpf, String gender, String email, String phone, Address address,
-            String registrationNumber, Boolean active) {
+            String registrationNumber) {
         super(name, birthDate, cpf, gender, email, phone, address);
         this.setRegistrationNumber(registrationNumber);
-        this.setActive(active);
     }
 
     public Assistant() {
@@ -33,11 +36,11 @@ public class Assistant extends Person{
     public void setRegistrationNumber(String registrationNumber) {
         this.registrationNumber = registrationNumber;
     }
-    public Boolean getActive() {
-        return active;
+    public AssistantStatus getStatus() {
+        return status;
     }
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setStatus(AssistantStatus status) {
+        this.status = status;
     }
 
     

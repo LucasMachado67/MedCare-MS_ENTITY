@@ -16,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 public interface PatientMapper {
     
     @Mapping(source = "address", target = "address")
+    @Mapping(target = "id", ignore = true)
     Patient toPatient(PatientCreationDTO dto);
 
     @Mapping(source = "address", target = "address") // Mapeia Address Entity -> AddressResponseDTO
@@ -24,6 +25,7 @@ public interface PatientMapper {
     List<Patient> toPatientResponse(List<PatientResponseDTO> dtos);
     List<PatientResponseDTO> toDtoResponse(List<Patient> patients);
 
+    @Mapping(target = "id", ignore = true)
     void updatePatientFromDto(PatientCreationDTO dto, @MappingTarget Patient patient);
 
 }

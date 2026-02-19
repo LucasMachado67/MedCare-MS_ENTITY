@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.ms.patient.dto.MedicCreationDTO;
 import com.ms.patient.exceptions.BusinessException;
 import com.ms.patient.utils.RegistrationNumber;
+
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
@@ -102,7 +103,7 @@ public class AssistantService {
      * @throws NoSuchElementException Se nenhum assistente for encontrado com o 'ID' fornecido.
      */
     public Assistant findById(long id){
-        return repository.findById(id).orElseThrow(() -> new NoSuchElementException("ASSISTANT NOT FOUND"));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("ASSISTANT NOT FOUND"));
     }
 
 

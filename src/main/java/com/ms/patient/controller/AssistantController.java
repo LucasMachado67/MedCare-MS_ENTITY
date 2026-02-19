@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.ms.patient.dto.MedicCreationDTO;
-import com.ms.patient.dto.MedicResponseDTO;
-import com.ms.patient.models.Medic;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,7 +53,7 @@ public class AssistantController {
      * se a regra de negócio for violada (mapeada para 4xx ou 500).
      */
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('ASSISTANT', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ASSISTANT')")
     public ResponseEntity<AssistantResponseDTO> registerAssistant(@RequestBody @Valid AssistantCreationDTO dto) throws JsonProcessingException {
 
         Assistant assistant = service.createAssistant(dto);
@@ -77,7 +74,7 @@ public class AssistantController {
      * @throws NoSuchElementException Se nenhum assistente for encontrado com o ID fornecido (mapeado para 404 Not Found).
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ASSISTANT', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ASSISTANT')")
     public ResponseEntity<AssistantResponseDTO> findById(@PathVariable long id){
         
         Assistant foundAssistant = service.findById(id);
@@ -105,7 +102,7 @@ public class AssistantController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'ASSISTANT')")
-    public ResponseEntity<AssistantResponseDTO> updateAssistant(@PathVariable long assistantId, @Valid @RequestBody AssistantCreationDTO entity) {
+    public ResponseEntity<AssistantResponseDTO> updateAssistant(@PathVariable(name = "id") long assistantId, @Valid @RequestBody AssistantCreationDTO entity) {
 
 
         Assistant assistantUpdated = service.updateAssistant(entity, assistantId);
@@ -117,8 +114,8 @@ public class AssistantController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ASSISTANT', 'ADMIN')")
-    public ResponseEntity<Void> deleteAssistant(@PathVariable long assistantId){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteAssistant(@PathVariable(name = "id") long assistantId){
 
         service.deleteAssistant(assistantId);
         return ResponseEntity.noContent().build();

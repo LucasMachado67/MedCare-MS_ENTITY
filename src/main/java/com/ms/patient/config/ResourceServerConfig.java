@@ -7,6 +7,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -55,6 +56,13 @@ public class ResourceServerConfig {
             // Liberando Swagger
             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             .requestMatchers("/patient/create").permitAll()
+            .requestMatchers("/patient/all").hasAnyRole("ADMIN", "ASSISTANT", "MEDIC")
+            .requestMatchers(HttpMethod.PUT, "/patient/*").hasAnyRole("ADMIN", "ASSISTANT", "USER")
+            .requestMatchers(HttpMethod.PUT, "/medic/*").hasAnyRole("ADMIN", "MEDIC")
+            .requestMatchers(HttpMethod.DELETE, "/patient/*", "/medic/*", "/assistant/*").hasAnyRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/assistant/*").hasAnyRole("ADMIN", "ASSISTANT", "MEDIC")
+            .requestMatchers(HttpMethod.PUT, "/assistant/*").hasAnyRole("ADMIN", "ASSISTANT")
+            .requestMatchers(HttpMethod.GET, "/person/all").hasAnyRole("ADMIN")
             .anyRequest().authenticated()
         )
         .oauth2ResourceServer(oauth2 -> oauth2

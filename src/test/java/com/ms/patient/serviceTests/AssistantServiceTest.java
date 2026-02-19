@@ -3,6 +3,7 @@ package com.ms.patient.serviceTests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ms.patient.dto.AssistantCreationDTO;
 import com.ms.patient.dto.AssistantResponseDTO;
+import com.ms.patient.enums.AssistantStatus;
 import com.ms.patient.enums.Habitation;
 import com.ms.patient.exceptions.BusinessException;
 import com.ms.patient.mappers.AddressMapper;
@@ -30,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.never;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -82,7 +82,7 @@ public class AssistantServiceTest {
         assistant.setBirthDate(new Date());
         assistant.setAddress(address);
 
-        assistant.setActive(true);
+        assistant.setStatus(AssistantStatus.ACTIVE);
         assistant.setRegistrationNumber("123321");
 
         assistantCreationDTO.setName("João Silva");
@@ -93,7 +93,7 @@ public class AssistantServiceTest {
         assistantCreationDTO.setBirthDate(new Date());
         assistantCreationDTO.setAddress(mapperAddress.toDtoCreation(address));
 
-        assistantCreationDTO.setActive(true);
+        assistantCreationDTO.setStatus(AssistantStatus.ACTIVE);
         assistantCreationDTO.setRegistrationNumber("123321");
 
     }

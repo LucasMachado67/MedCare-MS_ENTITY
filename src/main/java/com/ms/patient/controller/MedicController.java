@@ -107,7 +107,7 @@ public class MedicController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'ASSISTANT', 'MEDIC')")
-    public ResponseEntity<MedicResponseDTO> updateMedic(@PathVariable long medicId, @Valid @RequestBody MedicCreationDTO entity) {
+    public ResponseEntity<MedicResponseDTO> updateMedic(@PathVariable(name = "id") long medicId, @Valid @RequestBody MedicCreationDTO entity) {
 
         
         Medic medicUpdated = service.updateMedic(entity, medicId);
@@ -119,8 +119,8 @@ public class MedicController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ASSISTANT', 'ADMIN')")
-    public ResponseEntity<Void> deleteMedic(@PathVariable long medicId){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteMedic(@PathVariable(name = "id") long medicId){
         
         service.deleteMedic(medicId);
         return ResponseEntity.noContent().build();

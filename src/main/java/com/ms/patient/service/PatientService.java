@@ -18,6 +18,7 @@ import com.ms.patient.models.Patient;
 import com.ms.patient.producers.UserCreationProducer;
 import com.ms.patient.repositories.PatientRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 /**
@@ -92,7 +93,7 @@ public class PatientService {
      * @throws NoSuchElementException Se nenhum paciente for encontrado com o 'ID' fornecido.
      */
     public Patient findById(long id){
-        return repository.findById(id).orElseThrow(() -> new BusinessException("PATIENT NOT FOUND"));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("PATIENT NOT FOUND"));
     }
     /**
      * Retorna uma lista contendo todos os pacientes cadastrados no sistema.
@@ -108,7 +109,7 @@ public class PatientService {
 
         // 1. VALIDAÇÃO DE REGRA DE NEGÓCIO
 
-        var existingPatient = repository.findById(patientId).orElseThrow();
+        var existingPatient = repository.findById(patientId).orElseThrow(() -> new EntityNotFoundException("Patient not found"));
         //Validação dos campos de Person via personService
         boolean result = personService.validatePersonInfo(newDto);
         if(!result)

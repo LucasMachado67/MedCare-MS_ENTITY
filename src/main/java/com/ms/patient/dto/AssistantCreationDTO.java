@@ -1,10 +1,13 @@
 package com.ms.patient.dto;
 
+import com.ms.patient.enums.AssistantStatus;
 
 public class AssistantCreationDTO extends PersonCreationDTO{
 
     private String registrationNumber;
-    private Boolean active;
+    private AssistantStatus status;
+
+    public AssistantCreationDTO(){}
 
     public String getRegistrationNumber() {
         return this.registrationNumber;
@@ -14,11 +17,11 @@ public class AssistantCreationDTO extends PersonCreationDTO{
         this.registrationNumber = registrationNumber;
     }
 
-    public boolean getActive() {
-        return this.active;
+    public AssistantStatus getStatus() {
+        return this.status;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setStatus(AssistantStatus status) {
+        this.status = status;
     }
 }

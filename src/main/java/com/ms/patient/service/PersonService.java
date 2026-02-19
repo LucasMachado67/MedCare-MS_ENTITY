@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.ms.patient.dto.PersonCreationDTO;
@@ -53,18 +54,18 @@ public class PersonService {
         String cpfToValidate = dto.getCpf();
         //Validando se o e-mail é único
         if (repository.existsByEmail(dto.getEmail())) {
-            throw new EmailAlreadyExistsException(""); 
+            throw new EmailAlreadyExistsException("Email already registered"); 
         }
         
         // Validação matemática de CPF - comentado para facilitar testes iniciais
 //        if (!CpfValidatorUtils.isValidCpf(cpfToValidate)) {
-//            throw new InvalidCpfException("O CPF é inválido. Verifique o formato ou os dígitos.");
+//            throw new InvalidCpfException("Invalid CPF, verify and try again");
 //        }
 
         // Validação de Unicidade (usando o CPF limpo)
         String cleanCpf = cpfToValidate.replaceAll("[^0-9]", "");
         if (repository.existsByCpf(cleanCpf)) {
-            throw new CpfAlreadyExistsException(cleanCpf); 
+            throw new CpfAlreadyExistsException("Cpf already registered"); 
         }
 
         return true;
@@ -104,6 +105,7 @@ public class PersonService {
      * @return Uma {@link List} de entidades {@link Person}. Pode ser uma lista vazia,
      * mas nunca {@code null}.
      */
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Person> findAll(){
         return repository.findAll();
     }
@@ -116,7 +118,7 @@ public class PersonService {
      * (dependendo da assinatura no {@link PersonRepository}).
      */
     public Person findPersonByEmail(String email){
-        return repository.findPersonByEmail(email);
+        return repository.findPersonByEmail(email).orElseThrow(() -> new NoSuchElementException("Email not found"));
     }
 
 }

@@ -21,7 +21,7 @@ public class CpfAlreadyExistsException extends RuntimeException{
      *
      * @param cpf O CPF que causou a violação de unicidade ou a mensagem de erro detalhada.
      */
-    public CpfAlreadyExistsException(String cpf) {
-        super(cpf);
+    public CpfAlreadyExistsException(String message) {
+        super(message);
     }
 }
