@@ -15,6 +15,8 @@ import com.ms.patient.models.Assistant;
 @Mapper(componentModel = "spring", uses = { AddressMapper.class })
 public interface AssistantMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     @Mapping(source = "address", target = "address") // Mapeia AddressRequestDTO -> Address Entity
     Assistant toAssistant(AssistantCreationDTO dto);
 
@@ -22,9 +24,16 @@ public interface AssistantMapper {
     @Mapping(source = "address", target = "address") // Mapeia Address Entity -> AddressResponseDTO
     AssistantResponseDTO toAssistantResponseDTO(Assistant assistant);
 
+    @Mapping(target = "tenantId", ignore = true)
+    Assistant toEntity(AssistantResponseDTO dto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     List<Assistant> toAssistantResponse(List<AssistantResponseDTO> dtos);
     List<AssistantResponseDTO> toDtoResponse(List<Assistant> assistants);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     void updateAssistantFromDto(AssistantCreationDTO dto, @MappingTarget Assistant assistant);
 
 }

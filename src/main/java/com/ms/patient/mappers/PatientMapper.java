@@ -17,15 +17,22 @@ public interface PatientMapper {
     
     @Mapping(source = "address", target = "address")
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     Patient toPatient(PatientCreationDTO dto);
 
     @Mapping(source = "address", target = "address") // Mapeia Address Entity -> AddressResponseDTO
     PatientResponseDTO toPatientResponseDTO(Patient patient);
+    @Mapping(target = "tenantId", ignore = true)
+    Patient toEntity(PatientResponseDTO dto);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     List<Patient> toPatientResponse(List<PatientResponseDTO> dtos);
+
     List<PatientResponseDTO> toDtoResponse(List<Patient> patients);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     void updatePatientFromDto(PatientCreationDTO dto, @MappingTarget Patient patient);
 
 }

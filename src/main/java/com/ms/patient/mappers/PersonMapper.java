@@ -19,15 +19,20 @@ public interface PersonMapper {
     @Mapping(target = "phone", expression = "java(dto.getPhone().replaceAll(\"[^0-9]\", \"\"))")
     @Mapping(target = "cpf", expression = "java(dto.getCpf().replaceAll(\"[^0-9]\", \"\"))")
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     Person toEntityCreation(PersonCreationDTO dto);
     PersonCreationDTO toDtoCreation(Person person);
-
+    
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     Person toEntityResponse(PersonResponseDTO dto);
     PersonResponseDTO toDtoResponse(Person person);
-
+    
     List<Person> toEntityResponse(List<PersonResponseDTO> dtos);
     List<PersonResponseDTO> toDtoResponse(List<Person> entities);
-
+    
+    @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "id", ignore = true)
     void updatePersonFromDto(PersonCreationDTO dto, @MappingTarget Person person);
 }
 

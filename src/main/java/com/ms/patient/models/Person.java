@@ -3,6 +3,8 @@ package com.ms.patient.models;
 
 import java.util.Date;
 
+import com.ms.patient.tenant.BaseTenant;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -19,7 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name="person")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Person {
+public class Person extends BaseTenant{
 
     /**
      * Chave primária (Primary Key) da entidade.

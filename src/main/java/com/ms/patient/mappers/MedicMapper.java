@@ -24,6 +24,8 @@ public interface MedicMapper {
      * na Entidade (ex: passwords), use @Mapping(target = "password", ignore = true)
      * mas neste caso não é necessário.
      */
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     @Mapping(source = "address", target = "address") // Mapeia AddressRequestDTO -> Address Entity
     Medic toMedic(MedicCreationDTO dto);
 
@@ -36,7 +38,15 @@ public interface MedicMapper {
     @Mapping(source = "address", target = "address") // Mapeia Address Entity -> AddressResponseDTO
     MedicResponseDTO toMedicResponseDTO(Medic medic);
 
+    @Mapping(target = "tenantId", ignore = true)
+    Medic toEntity(MedicResponseDTO dto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "address", target = "address")
     List<Medic> toMedicResponse(List<MedicResponseDTO> dtos);
+    
     List<MedicResponseDTO> toDtoResponse(List<Medic> medics);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     void updateMedicFromDto(MedicCreationDTO dto, @MappingTarget Medic medic);
 }
