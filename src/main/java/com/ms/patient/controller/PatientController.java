@@ -36,7 +36,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@RequestMapping("patient")
+@RequestMapping("/patient")
 public class PatientController {
 
     @Autowired

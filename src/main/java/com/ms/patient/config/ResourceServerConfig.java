@@ -56,6 +56,7 @@ public class ResourceServerConfig {
             // Liberando Swagger
             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             .requestMatchers("/patient/create").permitAll()
+            .requestMatchers("/medic/create").permitAll()
             .requestMatchers("/patient/all").hasAnyRole("ADMIN", "ASSISTANT", "MEDIC")
             .requestMatchers(HttpMethod.PUT, "/patient/*").hasAnyRole("ADMIN", "ASSISTANT", "USER")
             .requestMatchers(HttpMethod.PUT, "/medic/*").hasAnyRole("ADMIN", "MEDIC")

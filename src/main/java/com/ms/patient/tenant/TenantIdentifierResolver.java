@@ -1,6 +1,5 @@
 package com.ms.patient.tenant;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver<Object>{
 
     @Override
-    public @Nullable String resolveCurrentTenantIdentifier() {
+    public String resolveCurrentTenantIdentifier() {
         String tenantId = TenantContext.getCurrentTenant();
         return (tenantId != null) ? tenantId : "BOOTSTRAP";
     }
@@ -34,6 +33,4 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
     public boolean validateExistingCurrentSessions() {
         return true;
     }
-
-    
 }

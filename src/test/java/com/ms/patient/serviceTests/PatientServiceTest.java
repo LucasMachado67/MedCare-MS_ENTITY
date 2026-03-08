@@ -63,7 +63,6 @@ public class PatientServiceTest {
     private AddressMapper mapperAddress;
 
     PatientCreationDTO patientCreationDTO;
-    PatientResponseDTO patientReponseDTO;
     Patient patient;
 
     @BeforeEach

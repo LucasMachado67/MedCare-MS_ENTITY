@@ -1,5 +1,7 @@
 package com.ms.patient.consumer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +17,15 @@ public class CompanyConsumer {
     @Autowired
     private CompanyProfileRepository repository;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @SqsListener(value = "${medcare.aws.sqs.queue.companty.register}")
-    public void receiveCompanyInfo(CompanyCreatedEvent event){
-        
+    public void receiveCompanyInfo(String message) throws JsonProcessingException {
+
+        CompanyCreatedEvent event =
+                objectMapper.readValue(message, CompanyCreatedEvent.class);
+
         CompanyProfile profile = new CompanyProfile();
         profile.setId(event.id());
         profile.setName(event.name());
@@ -26,5 +34,4 @@ public class CompanyConsumer {
         repository.save(profile);
         System.out.println("Perfil inicial da empresa criado");
     }
-    
 }
