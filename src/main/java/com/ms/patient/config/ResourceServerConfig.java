@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import com.ms.patient.tenant.TenantContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -100,6 +101,9 @@ public class ResourceServerConfig {
 
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             String role = jwt.getClaim("role");
+            String tenantId = jwt.getClaim("tenantId");
+            // Coloca o tenant no contexto da thread
+            TenantContext.setCurrentTenant(tenantId);
 
             return List.of(new SimpleGrantedAuthority("ROLE_" + role));
         });
