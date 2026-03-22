@@ -1,5 +1,6 @@
 package com.ms.patient.producers;
 
+import com.ms.patient.tenant.TenantContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +52,8 @@ public class UserCreationProducer {
         var event = new UserCreationEvent();
         event.setPerson_id(medic.getId());
         event.setUsername(medic.getEmail());
-        event.setRole(("MEDIC"));   
+        event.setRole(("MEDIC"));
+        event.setTenantId(TenantContext.getCurrentTenant());
         //Passando os dados como 'string'
         String json = objectMapper.writeValueAsString(event);
 
@@ -74,6 +76,7 @@ public class UserCreationProducer {
         event.setPerson_id(assistant.getId());
         event.setUsername(assistant.getEmail());
         event.setRole(("ASSISTANT"));
+        event.setTenantId(TenantContext.getCurrentTenant());
         //Passando os dados como 'string'
         String json = objectMapper.writeValueAsString(event);
 
@@ -97,6 +100,7 @@ public class UserCreationProducer {
         event.setPerson_id(patient.getId());
         event.setUsername(patient.getEmail());
         event.setRole(("USER"));
+        event.setTenantId(TenantContext.getCurrentTenant());
         //Passando os dados como 'string'
         String json = objectMapper.writeValueAsString(event);
 

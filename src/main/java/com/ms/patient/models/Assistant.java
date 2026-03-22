@@ -18,12 +18,13 @@ public class Assistant extends Person{
     private String registrationNumber;
     @NotNull
     @JsonProperty("active")
-    private AssistantStatus status = AssistantStatus.ACTIVE;
+    private AssistantStatus status;
 
     public Assistant(String name, Date birthDate, String cpf, String gender, String email, String phone, Address address,
             String registrationNumber) {
         super(name, birthDate, cpf, gender, email, phone, address);
         this.setRegistrationNumber(registrationNumber);
+        this.setStatus(AssistantStatus.ACTIVE);
     }
 
     public Assistant() {

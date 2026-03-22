@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ms.patient.enums.AssistantStatus;
 import com.ms.patient.exceptions.BusinessException;
 import com.ms.patient.utils.RegistrationNumber;
 
@@ -67,6 +68,7 @@ public class AssistantService {
         do {
             dto.setRegistrationNumber(registrationNumber.generateNumber());
         } while (repository.existsByRegistrationNumber(dto.getRegistrationNumber()));
+        dto.setStatus(AssistantStatus.ACTIVE);
 
         // 2. CONVERSÃO DTO ≥ ENTIDADE
         // O Mapper cuida da criação de Person, Address e Assistant.
