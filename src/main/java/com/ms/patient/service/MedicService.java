@@ -11,6 +11,7 @@ import com.ms.patient.models.Medic;
 import com.ms.patient.producers.UserCreationProducer;
 import com.ms.patient.repositories.MedicRepository;
 
+import com.ms.patient.tenant.TenantContext;
 import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Service;
@@ -90,8 +91,8 @@ public class MedicService {
         // ENVIO DO EVENTO ASSÍNCRONO - para criação de um usuário no sistema
         // ---------------------------------------------
 
-        // 4. Criando o objeto de evento
-        medicProducer.publishUserCreationToMedicEvent(savedMedic);
+        // 4. Criando o objeto de evento e enviando o tenantId junto
+        medicProducer.publishUserCreationToMedicEvent(savedMedic, dto.getTenantId());
         
         return savedMedic;
     }
@@ -103,8 +104,8 @@ public class MedicService {
      * mas nunca {@code null}.
      */
     public List<Medic> findAll(){
-        List<Medic> medics = repository.findAll();
-        return medics;
+        String tenantId = TenantContext.getTenantId();
+        return repository.findAllByTenantId(tenantId);
     }
 
     /**

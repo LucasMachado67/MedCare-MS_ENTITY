@@ -28,12 +28,13 @@ public class PersonCreationDTO {
     @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?\\d{4,5}[\\s-]?\\d{4}$", 
              message = "O telefone não está no formato correto (Ex: (11) 99999-9999 ou 11999999999).")
     private String phone;
-
+    private String tenantId;
     private AddressDTO address;
 
-    public PersonCreationDTO(){}
 
-    public PersonCreationDTO(String name, Date birthDate, String cpf, String gender, String email, String phone, AddressDTO address){
+    public PersonCreationDTO(){}
+    public PersonCreationDTO(String name, Date birthDate, String cpf, String gender, String email, String phone, AddressDTO address, String tenantId){
+        this.tenantId = tenantId;
         setName(name);
         setBirthDate(birthDate);
         setCpf(cpf);
@@ -99,5 +100,11 @@ public class PersonCreationDTO {
         this.address = address;
     }
 
-    
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 }

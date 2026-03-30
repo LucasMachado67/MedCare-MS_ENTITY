@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ms.patient.enums.AssistantStatus;
 import com.ms.patient.exceptions.BusinessException;
 import com.ms.patient.utils.RegistrationNumber;
 
@@ -71,6 +72,7 @@ public class AssistantService {
         // 2. CONVERSÃO DTO ≥ ENTIDADE
         // O Mapper cuida da criação de Person, Address e Assistant.
         Assistant assistant = mapper.toAssistant(dto);
+        assistant.setStatus(AssistantStatus.ACTIVE);
 
         // 3. PERSISTÊNCIA
         Assistant savedAssistant = repository.save(assistant);
@@ -80,7 +82,7 @@ public class AssistantService {
         // ---------------------------------------------
 
         // 4. Criando o objeto de evento
-        assistantProducer.publishUserCreationToAssistantEvent(savedAssistant);
+        assistantProducer.publishUserCreationToAssistantEvent(savedAssistant, dto.getTenantId());
         
         return savedAssistant;
     }

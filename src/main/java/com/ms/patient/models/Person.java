@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name="person")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Person {
+public class Person extends Tenant{
 
     /**
      * Chave primária (Primary Key) da entidade.

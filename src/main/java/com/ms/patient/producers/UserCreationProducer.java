@@ -46,12 +46,13 @@ public class UserCreationProducer {
      *
      * @param medic A entidade Medic recém-criada, contendo 'ID' e e-mail necessários para o evento.
      */
-    public void publishUserCreationToMedicEvent(Medic medic) throws JsonProcessingException {
+    public void publishUserCreationToMedicEvent(Medic medic, String tenantId) throws JsonProcessingException {
         //Usando o mesmo ID para ambas as entidades (Medic = UserMedic)
         var event = new UserCreationEvent();
         event.setPerson_id(medic.getId());
         event.setUsername(medic.getEmail());
-        event.setRole(("MEDIC"));   
+        event.setRole(("MEDIC"));
+        event.setTenantId(tenantId);
         //Passando os dados como 'string'
         String json = objectMapper.writeValueAsString(event);
 
@@ -69,11 +70,12 @@ public class UserCreationProducer {
      *
      * @param assistant A entidade Assistant recém-criada, contendo 'ID' e Endereço eletrónico necessários para o evento.
      */
-    public void publishUserCreationToAssistantEvent(Assistant assistant) throws JsonProcessingException{
+    public void publishUserCreationToAssistantEvent(Assistant assistant, String tenantId) throws JsonProcessingException{
         var event = new UserCreationEvent();
         event.setPerson_id(assistant.getId());
         event.setUsername(assistant.getEmail());
         event.setRole(("ASSISTANT"));
+        event.setTenantId(tenantId);
         //Passando os dados como 'string'
         String json = objectMapper.writeValueAsString(event);
 

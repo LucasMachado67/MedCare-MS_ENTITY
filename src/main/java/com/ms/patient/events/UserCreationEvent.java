@@ -29,6 +29,8 @@ public class UserCreationEvent {
          * O papel (role) ou nível de permissão assoc à credencial (ex: "PATIENT", "MEDIC").
          */
         private String role;
+
+        private String tenantId;
         
         public Long getPerson_id() {
                 return person_id;
@@ -49,5 +51,11 @@ public class UserCreationEvent {
                 this.role = role;
         }
 
-        
+        public String getTenantId() {
+                return tenantId;
+        }
+
+        public void setTenantId(String tenantId) {
+                this.tenantId = tenantId;
+        }
 }
