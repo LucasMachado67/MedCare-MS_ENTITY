@@ -8,12 +8,16 @@ import com.ms.patient.exceptions.CpfAlreadyExistsException;
 import com.ms.patient.exceptions.CrmInvalidException;
 import com.ms.patient.mappers.MedicMapper;
 import com.ms.patient.models.Medic;
+import com.ms.patient.models.Person;
 import com.ms.patient.producers.UserCreationProducer;
 import com.ms.patient.repositories.MedicRepository;
 
 import com.ms.patient.tenant.TenantContext;
+import com.ms.patient.utils.UserSpecifications;
 import jakarta.validation.Valid;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,9 +107,14 @@ public class MedicService {
      * @return Uma {@link List} de {@link MedicResponseDTO}s. Pode ser uma lista vazia,
      * mas nunca {@code null}.
      */
-    public List<Medic> findAll(){
+    public List<Medic> findAll(String search, String orderBy, String direction, String filterBy){
         String tenantId = TenantContext.getTenantId();
-        return repository.findAllByTenantId(tenantId);
+
+        Sort sort = Sort.by(Sort.Direction.fromString(direction.toUpperCase()), orderBy);
+
+        Specification<Medic> spec = UserSpecifications.filterUsers(search, filterBy, tenantId);
+
+        return repository.findAll(spec, sort);
     }
 
     /**

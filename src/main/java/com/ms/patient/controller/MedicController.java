@@ -14,14 +14,7 @@ import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controlador REST para gerir operações relacionadas à entidade Médico (Medic).
@@ -97,9 +90,14 @@ public class MedicController {
      * HTTP 200 (OK).
      */
     @GetMapping("/all")
-    public ResponseEntity<List<MedicResponseDTO>> findAll(){
+    public ResponseEntity<List<MedicResponseDTO>> findAll(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "name") String orderBy,
+            @RequestParam(defaultValue = "ASC") String direction,
+            @RequestParam(required = false, defaultValue = "name") String filterBy
+            ){
         
-        List<Medic> medics = service.findAll();
+        List<Medic> medics = service.findAll(search, orderBy, direction, filterBy);
         List<MedicResponseDTO> response = mapper.toDtoResponse(medics);
 
         return ResponseEntity.ok(response);

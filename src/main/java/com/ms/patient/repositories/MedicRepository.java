@@ -2,6 +2,7 @@ package com.ms.patient.repositories;
 
 import com.ms.patient.models.Medic;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,9 +20,7 @@ import java.util.List;
  * @since 2025-11-17
  */
 @Repository
-public interface MedicRepository extends JpaRepository<Medic, Long> {
+public interface MedicRepository extends JpaRepository<Medic, Long>, JpaSpecificationExecutor<Medic> {
 
     Boolean existsByCrm(String crm);
-    @Query(value = "SELECT * FROM medics m JOIN person p ON m.person_id = p.id WHERE p.tenant_id = :tid", nativeQuery = true)
-    List<Medic> findAllByTenantId(@Param("tid") String tenantId);
 }
